@@ -1,0 +1,37 @@
+name: "Data Platform CI"
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "terraform/**"
+      - "infraflow.config.yaml"
+      - ".github/workflows/infraflow-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  governance-gate:
+    name: "InfraFlow Governance Gate"
+    uses: TM-threemavithana/infraflow/.github/workflows/reusable-tf-governance.yml@be51718f06a2662099500a710e93e6e8201b4f1c
+    with:
+      config-file: "infraflow.config.yaml"
+      working-directory: "."
+      platform-sha: "be51718f06a2662099500a710e93e6e8201b4f1c"
+      expected-adapter: "gcp"
+
+  gcp-speculative-plan:
+    name: "GCP Speculative Plan (Cloud-Free)"
+    needs: [governance-gate]
+    uses: TM-threemavithana/infraflow/.github/workflows/reusable-tf-gcp.yml@be51718f06a2662099500a710e93e6e8201b4f1c
+    with:
+      gcp-project-id: "infraflow-data-dev-01"
+      gcp-region: "us-central1"
+      backend-bucket: "gcs-data-infraflow-tfstate"
+      backend-prefix: "env/dev"
+      terraform-version: "1.10.4"
+      working-directory: "terraform"
+      environment: "dev"
+      enable-gcp-auth: false
