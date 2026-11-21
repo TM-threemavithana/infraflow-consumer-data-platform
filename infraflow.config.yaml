@@ -1,0 +1,14 @@
+version: "1.0"
+consumer_id: "consumer-data-platform"
+team: "data-engineering"
+workload_type: "data-platform"
+terraform_dir: "terraform"
+environment: "dev"
+adapter: "gcp"
+platform_ref: "TM-threemavithana/infraflow"
+platform_sha: "8fd761bb42165435e1162f37ee39df15d5532b09"
+terraform_version: "1.10.4"
+security_controls:
+  enforce_mandatory_scanners: true
+  fail_on_destructive: false
+  max_allowed_deletions: 20
